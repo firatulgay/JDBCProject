@@ -19,6 +19,14 @@ public class App {
     static Scanner scan = new Scanner(System.in);
 
     public static void main(String[] args) {
+
+        boolean isBaglantiHazir = baglantiyiKontrolEt();
+        if (!isBaglantiHazir) {
+            System.out.println("Bağlantı problemi var. Lütfen kontrol edin.");
+        } else {
+            System.out.println("Bağlantı hazır");
+        }
+
         while (true) {
             System.out.println("1. Hero ekle. ");
             System.out.println("2. Movie ekle. ");
@@ -45,34 +53,24 @@ public class App {
         }
     }
 
+    private static boolean baglantiyiKontrolEt() {
 
-//        veritabaniIslemleri.saveHero(hero);
+        try (Connection conn = DriverManager.getConnection(
+                JDBC_CONNECTION_STR, USERNAME, PASSWORD)) {
 
+            if (conn != null) {
+                return true;
+            } else {
+                System.out.println("Failed to make connection!");
+            }
 
-//        boolean isBaglantiHazir = baglantiyiKontrolEt();
-//        if (!isBaglantiHazir) {
-//            System.out.println("Bağlantı problemi var. Lütfen kontrol edin.");
-//        } else {
-//            System.out.println("Bağlantı hazır");
-//    }
-//}
-//    private static boolean baglantiyiKontrolEt() {
-//
-//        try (Connection conn = DriverManager.getConnection(
-//                JDBC_CONNECTION_STR, USERNAME, PASSWORD)) {
-//
-//            if (conn != null) {
-//                return true;
-//            } else {
-//                System.out.println("Failed to make connection!");
-//            }
-//
-//        } catch (SQLException e) {
-//            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return false;
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
 
 
